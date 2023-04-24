@@ -13,21 +13,35 @@ namespace AdminBooks.Controllers
         [HttpGet("{isbn}")]
         public async Task<IActionResult> GetBook(string isbn)
         {
-            var url = $"http://openlibrary.org/api/books?bibkeys=ISBN:{isbn}&format=json&jscmd=details";
-            var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync(url);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var json = await response.Content.ReadAsStringAsync();
-                var book = JsonConvert.DeserializeObject<Books>(json);
+                var query = "AIzaSyBHDqBQ9uNJv3qdTh9ZhL3Lq9lirhwvasE";
+                var url = $"https://www.googleapis.com/books/v1/volumes?q={isbn}";
+                var httpClient = new HttpClient();
+                var response = await httpClient.GetAsync(url);
 
-                return Ok(book);
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var book = JsonConvert.DeserializeObject<Books>(json);
+
+                    return Ok(book);
+                }
+                else
+                {
+                    var errorResponse = await response.Content.ReadAsStringAsync();
+                    var errorMessage = JToken.Parse(errorResponse)["error"].ToString();
+
+                    return StatusCode((int)response.StatusCode, errorMessage);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return StatusCode((int)response.StatusCode, "Ocurrió un error al realizar la peticion.");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
+            
+           
+           
         }
     }
 }
