@@ -1,4 +1,4 @@
-﻿namespace AdminBooks.Models
+﻿namespace AdminBooks.Data.Models.Response
 {
 
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
@@ -56,7 +56,7 @@
         public bool image { get; set; }
     }
 
-    public class Books
+    public class BooksResponse
     {
         public string? kind { get; set; }
         public int totalItems { get; set; }

@@ -1,9 +1,9 @@
-﻿using AdminBooks.Models;
+﻿using AdminBooks.Data.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace AdminBooks.Controllers
+namespace AdminBooks.App.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -23,7 +23,7 @@ namespace AdminBooks.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     string json = await response.Content.ReadAsStringAsync();
-                    Books? book = JsonConvert.DeserializeObject<Books>(json);
+                    BooksResponse? book = JsonConvert.DeserializeObject<BooksResponse>(json);
 
                     return Ok(book);
                 }
