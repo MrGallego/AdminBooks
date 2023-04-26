@@ -9,6 +9,6 @@ namespace AdminBooks.Data
         {
             
         }
-     
+        public DbSet<Books> Books { get; set; }
     }
 }
