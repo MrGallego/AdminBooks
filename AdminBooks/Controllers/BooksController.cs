@@ -1,5 +1,4 @@
 ﻿using AdminBooks.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -10,27 +9,28 @@ namespace AdminBooks.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
+
+
         [HttpGet("{isbn}")]
         public async Task<IActionResult> GetBook(string isbn)
         {
             try
             {
-                var query = "AIzaSyBHDqBQ9uNJv3qdTh9ZhL3Lq9lirhwvasE";
-                var url = $"https://www.googleapis.com/books/v1/volumes?q={isbn}";
-                var httpClient = new HttpClient();
-                var response = await httpClient.GetAsync(url);
+                string url = $"https://www.googleapis.com/books/v1/volumes?q={isbn}";
+                HttpClient httpClient = new();
+                HttpResponseMessage response = await httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var json = await response.Content.ReadAsStringAsync();
-                    var book = JsonConvert.DeserializeObject<Books>(json);
+                    string json = await response.Content.ReadAsStringAsync();
+                    Books? book = JsonConvert.DeserializeObject<Books>(json);
 
                     return Ok(book);
                 }
                 else
                 {
-                    var errorResponse = await response.Content.ReadAsStringAsync();
-                    var errorMessage = JToken.Parse(errorResponse)["error"].ToString();
+                    string errorResponse = await response.Content.ReadAsStringAsync();
+                    string errorMessage = JToken.Parse(errorResponse)["error"].ToString();
 
                     return StatusCode((int)response.StatusCode, errorMessage);
                 }
@@ -39,9 +39,9 @@ namespace AdminBooks.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-            
-           
-           
+
+
+
         }
     }
 }
